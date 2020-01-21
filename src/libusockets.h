@@ -222,6 +222,8 @@ WIN32_EXPORT struct us_socket_t *us_socket_close(int ssl, struct us_socket_t *s)
 /* Copy remote (IP) address of socket, or fail with zero length. */
 WIN32_EXPORT void us_socket_remote_address(int ssl, struct us_socket_t *s, char *buf, int *length);
 
+WIN32_EXPORT void us_socket_context_attach(int ssl, struct us_socket_context_t *context, int ext_size, LIBUS_SOCKET_DESCRIPTOR client_fd);
+
 #ifdef __cplusplus
 }
 #endif

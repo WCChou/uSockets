@@ -303,3 +303,21 @@ void *us_socket_context_ext(int ssl, struct us_socket_context_t *context) {
 
     return context + 1;
 }
+
+void us_socket_context_attach(int ssl, struct us_socket_context_t *context, int ext_size, LIBUS_SOCKET_DESCRIPTOR client_fd) {
+    struct us_poll_t *p = us_create_poll(context->loop, 0, sizeof(struct us_socket_t) - sizeof(struct us_poll_t) + ext_size);
+    us_poll_init(p, client_fd, POLL_TYPE_SOCKET);
+    us_poll_start(p, context->loop, LIBUS_SOCKET_READABLE);
+
+    struct us_socket_t *s = (struct us_socket_t *) p;
+
+    s->context = context;
+
+    /* We always use nodelay */
+    bsd_socket_nodelay(client_fd, 1);
+
+    us_internal_socket_context_link(context, s);
+
+    struct bsd_addr_t addr;
+    context->on_open(s, 0, bsd_addr_get_ip(&addr), bsd_addr_get_ip_length(&addr));
+}
