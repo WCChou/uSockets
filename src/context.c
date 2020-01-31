@@ -321,3 +321,18 @@ void us_socket_context_attach(int ssl, struct us_socket_context_t *context, int 
     struct bsd_addr_t addr;
     context->on_open(s, 0, bsd_addr_get_ip(&addr), bsd_addr_get_ip_length(&addr));
 }
+
+struct us_socket_t *us_socket_context_adopt_existing_socket(int ssl, struct us_socket_context_t *context, LIBUS_SOCKET_DESCRIPTOR fd, int ext_size) {
+    struct us_poll_t *p = us_create_poll(context->loop, 0, sizeof(struct us_socket_t) - sizeof(struct us_poll_t) + ext_size);
+    us_poll_init(p, fd, POLL_TYPE_SOCKET);
+    us_poll_start(p, context->loop, LIBUS_SOCKET_READABLE);
+
+    struct us_socket_t *s = (struct us_socket_t *) p;
+    s->next = 0;
+    s->prev = 0;
+
+    us_internal_socket_context_link(context, s);
+
+    return s;
+}
+

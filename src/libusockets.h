@@ -224,6 +224,8 @@ WIN32_EXPORT void us_socket_remote_address(int ssl, struct us_socket_t *s, char 
 
 WIN32_EXPORT void us_socket_context_attach(int ssl, struct us_socket_context_t *context, int ext_size, LIBUS_SOCKET_DESCRIPTOR client_fd);
 
+WIN32_EXPORT struct us_socket_t *us_socket_context_adopt_existing_socket(int ssl, struct us_socket_context_t *context, LIBUS_SOCKET_DESCRIPTOR fd, int ext_size);
+
 #ifdef __cplusplus
 }
 #endif
