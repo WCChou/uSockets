@@ -226,6 +226,9 @@ WIN32_EXPORT void us_socket_context_attach(int ssl, struct us_socket_context_t *
 
 WIN32_EXPORT struct us_socket_t *us_socket_context_adopt_existing_socket(int ssl, struct us_socket_context_t *context, LIBUS_SOCKET_DESCRIPTOR fd, int ext_size);
 
+/* Immediately stop the socket from event loop */
+WIN32_EXPORT struct us_socket_t *us_socket_stop(int ssl, struct us_socket_t *s);
+
 #ifdef __cplusplus
 }
 #endif
